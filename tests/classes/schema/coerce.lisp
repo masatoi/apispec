@@ -64,6 +64,7 @@
             t)))
   (ok (eq (coerce-data t 'boolean) t))
   (ok (eq (coerce-data nil 'boolean) nil))
+  (ok (eq (coerce-data :false (schema (boolean :default t))) nil))
   (ok (signals (coerce-data 1 'boolean) 'schema-coercion-failed))
   (ok (signals (coerce-data #(1) 'boolean) 'schema-coercion-failed)))
 
@@ -75,6 +76,8 @@
   (ok (equalp (coerce-data '(1 2 3) 'array)
               #(1 2 3)))
   (ok (equalp (coerce-data '() 'array)
+              #()))
+  (ok (equalp (coerce-data #() 'array)
               #()))
   (ok (signals (coerce-data '(1 2 3) '(array 10))
           'schema-validation-failed))

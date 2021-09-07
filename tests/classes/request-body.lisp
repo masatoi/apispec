@@ -92,6 +92,29 @@
             ("address" . "東京都台東区上野２丁目７−１２")
             ("historyMetadata" . (("type" . "culture"))))))))
 
+(deftest parse-empty-element-tests
+  (let* ((schema (schema
+                  (object
+                   (("bool_val" (boolean :default t))
+                    ("nullable_str" (string :nullable t))
+                    ("empty_obj" object)
+                    ("array" array)))))
+         (request-body
+           (make-instance 'request-body
+                          :content `(("application/json"
+                                      . ,(make-instance 'media-type :schema schema))))))
+
+    (ok (alist=
+         (parse-request-body
+          (make-stream "{\"bool_val\":false,\"nullable_str\":null,\"empty_obj\":{},\"array\":[]}")
+          "application/json"
+          nil
+          request-body)
+         '(("array" . #())
+           ("empty_obj")
+           ("nullable_str")
+           ("bool_val"))))))
+
 (deftest invalid-format-tests
   (ok (signals (parse-request-body
                  (make-stream "blah")

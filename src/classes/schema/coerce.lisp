@@ -138,6 +138,10 @@
               (schema-has-default-p schema))
          (schema-default schema))
         (t (error 'schema-coercion-failed :value value :schema schema))))
+    (cl:keyword
+     (if (eq value :false)
+         nil
+         (error 'schema-coercion-failed :value value :schema schema)))
     (cl:boolean value)
     (otherwise
      (error 'schema-coercion-failed :value value :schema schema))))
